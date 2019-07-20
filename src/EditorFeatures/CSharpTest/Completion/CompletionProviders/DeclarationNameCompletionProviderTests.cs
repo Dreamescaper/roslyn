@@ -1454,6 +1454,62 @@ public class Class1
             await VerifyItemExistsAsync(markup, "nullables");
         }
 
+        [WorkItem(37392, "https://github.com/dotnet/roslyn/issues/37392")]
+        [Fact, Trait(Traits.Feature, Traits.Features.Completion)]
+        public async Task TypeIsNullableStruct()
+        {
+            var markup = @"
+public class Class1
+{
+  public void Method()
+  {
+    TestStruct? $$
+  }
+}
+
+public struct TestStruct { }
+";
+            await VerifyItemExistsAsync(markup, "testStruct");
+        }
+
+        [WorkItem(37392, "https://github.com/dotnet/roslyn/issues/37392")]
+        [Fact, Trait(Traits.Feature, Traits.Features.Completion)]
+        public async Task TypeIsNullableReference()
+        {
+            var markup = @"
+public class Class1
+{
+  public void Method()
+  {
+    TestType? $$
+  }
+}
+
+public class TestType { }
+";
+            await VerifyItemExistsAsync(markup, "testType");
+        }
+
+        [WorkItem(37392, "https://github.com/dotnet/roslyn/issues/37392")]
+        [Fact, Trait(Traits.Feature, Traits.Features.Completion)]
+        public async Task TypeIsEnumerableOfNullableStructs()
+        {
+            var markup = @"
+using System.Collections.Generic;
+
+public class Class1
+{
+  public void Method()
+  {
+    IEnumerable<TestStruct?> $$
+  }
+}
+
+public struct TestStruct { }
+";
+            await VerifyItemExistsAsync(markup, "testStructs");
+        }
+
         [Fact, Trait(Traits.Feature, Traits.Features.Completion)]
         public async Task CustomNamingStyleInsideClass()
         {
